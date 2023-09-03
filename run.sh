@@ -11,7 +11,7 @@ arquivo="$1"
 nome_do_programa="${arquivo%.cpp}"
 
 # Compila o programa C++
-if g++ -pthread -o "$nome_do_programa" "$arquivo" -lglfw -lglut -lGLU -lGL -lm -lXrandr -lXxf86vm -lXi -lXinerama -lX11 -lrt -ldl; then
+if g++ -o "$nome_do_programa" "$arquivo" -lglut -lGLU -lGL -lm ; then
   # Executa o programa se a compilação for bem-sucedida
   "./$nome_do_programa"
 else

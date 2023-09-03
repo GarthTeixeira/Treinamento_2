@@ -11,7 +11,6 @@
 
 #include <vector>
 #include <iostream>
-#include <map>
 #include <math.h>
 
 // Instale as seguintes bibliotecas:
@@ -20,60 +19,19 @@
 // Para compilar execute no terminal:
 // g++ -o Transformacao exemplo_transformacao.cpp -lglut -lGLU -lGL -lm
 
-std::vector<glm::vec3> cube;
+std::vector<glm::vec4> cube;
 
-
-void keyboard(unsigned char key, int x , int y);
-
-
-
-GLfloat horientacao[3] = {0.0,0.0,1.0};
-
-GLfloat offset = 0.01;
-
-GLfloat distanciaCamera = 50.0;
-
-GLfloat distanciaCentroide = 3.0;
-
-GLfloat posicaoAtual[3] = {50.0f,50.0f,50.0f} ;
-
-
-std::map<char,std::vector<GLfloat>> first;
-
-std::vector<std::vector<GLfloat>> posicoes = {
-    {10.0f, 6.0f, 3.0f + distanciaCamera}, // Vista frontal
-    {10.0f, 6.0f, 3.0f - distanciaCamera}, // Vista traseira
-    {10.0f+ distanciaCamera, 6.0f, 3.0f}, // Vista direita
-    {10.0f- distanciaCamera, 6.0f, 3.0f}, // Vista esquerda
-    {10.0f,6.0f-distanciaCamera,3.0f}, //Vista de baixo
-    {10.0f,6.0f+distanciaCamera,3.0f} //Vista de cima
-
-};
-
-void teclas_faces(){
-   
-    first['q'] = posicoes[0];
-    first['w'] = posicoes[1];
-    first['e'] = posicoes[2];
-    first['r'] = posicoes[3];
-    first['t'] = posicoes[4];
-    first['y'] = posicoes[5];
-    
-}
 
 void pontos_cubo()
 {
-	// Face frontal
-    cube.push_back(glm::vec3(10.0f - distanciaCentroide, 6.0f - distanciaCentroide, 3.0f + distanciaCentroide)); // Vértice 0
-    cube.push_back(glm::vec3(10.0f + distanciaCentroide, 6.0f - distanciaCentroide, 3.0f + distanciaCentroide)); // Vértice 1
-    cube.push_back(glm::vec3(10.0f + distanciaCentroide, 6.0f + distanciaCentroide, 3.0f + distanciaCentroide)); // Vértice 2
-    cube.push_back(glm::vec3(10.0f - distanciaCentroide, 6.0f + distanciaCentroide, 3.0f + distanciaCentroide)); // Vértice 3
-
-    // Face traseira
-    cube.push_back(glm::vec3(10.0f - distanciaCentroide, 6.0f - distanciaCentroide, 3.0f - distanciaCentroide)); // Vértice 4
-    cube.push_back(glm::vec3(10.0f + distanciaCentroide, 6.0f - distanciaCentroide, 3.0f - distanciaCentroide)); // Vértice 5
-    cube.push_back(glm::vec3(10.0f + distanciaCentroide, 6.0f + distanciaCentroide, 3.0f - distanciaCentroide)); // Vértice 6
-    cube.push_back(glm::vec3(10.0f - distanciaCentroide, 6.0f + distanciaCentroide, 3.0f - distanciaCentroide)); // Vértice 7
+	cube.push_back(glm::vec4( 0.0f, 0.0f, 0.0f, 1.0f ));
+	cube.push_back(glm::vec4( 1.0f, 0.0f, 0.0f, 1.0f ));
+	cube.push_back(glm::vec4( 1.0f, 1.0f, 0.0f, 1.0f ));
+	cube.push_back(glm::vec4( 0.0f, 1.0f, 0.0f, 1.0f ));
+	cube.push_back(glm::vec4( 0.0f, 0.0f,-1.0f, 1.0f ));
+	cube.push_back(glm::vec4( 1.0f, 0.0f,-1.0f, 1.0f ));
+	cube.push_back(glm::vec4( 1.0f, 1.0f,-1.0f, 1.0f ));
+	cube.push_back(glm::vec4( 0.0f, 1.0f,-1.0f, 1.0f ));
 }
 
 std::vector<glm::vec4> transformacao(std::vector<glm::vec4> cube_in)
@@ -108,18 +66,18 @@ void referencia()
     glBegin(GL_LINES);
     glColor3f(1, 0, 0);
     glVertex3f(0, 0, 0);
-    glVertex3f(100, 0, 0);
+    glVertex3f(35, 0, 0);
     glColor3f(0, 1, 0);
     glVertex3f(0, 0, 0);
-    glVertex3f(0, 100, 0);
+    glVertex3f(0, 35, 0);
     glColor3f(0, 0, 1);
     glVertex3f(0, 0, 0);
-    glVertex3f(0, 0, 100);
+    glVertex3f(0, 0, 35);
     glEnd();
 
 }
 
-void draw_cubo(std::vector<glm::vec3> cube_in)
+void draw_cubo(std::vector<glm::vec4> cube_in)
 {
     
     glColor3f(1, 0, 0);
@@ -189,28 +147,14 @@ void draw_cubo(std::vector<glm::vec3> cube_in)
 void Display(void)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    // Especifica sistema de coordenadas de projeção
-    glMatrixMode(GL_PROJECTION);
-    // Inicializa sistema de coordenadas de projeção
-    glLoadIdentity();
-
-    // Especifica a projeção perspectiva
-    gluPerspective(10, (GLfloat)glutGet(GLUT_WINDOW_WIDTH) / (GLfloat)glutGet(GLUT_WINDOW_HEIGHT), 0.5, 500);
-
-    // Especifica sistema de coordenadas do modelo
-    glMatrixMode(GL_MODELVIEW);
-    // Inicializa sistema de coordenadas do modelo
-    glLoadIdentity();
-    // Especifica posição do observador e do alvo
-    gluLookAt(posicaoAtual[0] ,posicaoAtual[1] - offset , posicaoAtual[2] - offset, 10.0f, 6.0f, 3.0f, 0.0, 0.0, 1.0);
-
-
     referencia();
-    draw_cubo(cube);
+    //draw_cubo(cube);
+    
+    // std::vector<glm::vec4> pontos = transformacao(cube);
+    // draw_cubo(pontos);
+    
     glutPostRedisplay();
     glutSwapBuffers();
-    glutKeyboardFunc(keyboard);
 }
 
 // Inicializa parâmetros de rendering
@@ -230,7 +174,26 @@ void Inicializa(void)
 void AlteraTamanhoJanela(GLsizei w, GLsizei h)
 {
     // Para previnir uma divisão por zero
-   
+    if (h == 0)
+        h = 1;
+
+    // Especifica o tamanho da viewport
+    glViewport(0, 0, w, h);
+
+    // Especifica sistema de coordenadas de projeção
+    glMatrixMode(GL_PROJECTION);
+    // Inicializa sistema de coordenadas de projeção
+    glLoadIdentity();
+
+    // Especifica a projeção perspectiva
+    gluPerspective(10, (GLfloat)w / (GLfloat)h, 0.5, 500);
+
+    // Especifica sistema de coordenadas do modelo
+    glMatrixMode(GL_MODELVIEW);
+    // Inicializa sistema de coordenadas do modelo
+    glLoadIdentity();
+    // Especifica posição do observador e do alvo
+    gluLookAt(15.0, 15.0, 15.0, 0, 0, 0, 0, 0, 1);
 }
 
 // Programa Principal
@@ -238,40 +201,15 @@ int main(int argc, char **argv)
 {
 
     pontos_cubo();
-    teclas_faces();
-
+    
+    
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutInitWindowSize(500, 500);
     glutCreateWindow("Visualizacao 3D");
     glutDisplayFunc(Display);
-    //glutReshapeFunc(AlteraTamanhoJanela);
+    glutReshapeFunc(AlteraTamanhoJanela);
     //glutMouseFunc(GerenciaMouse);
     Inicializa();
     glutMainLoop();
-}
-
-void keyboard(unsigned char key, int x, int y){
-
-    std::cout << key << std::endl;
-
-    if(first.find(key) == first.end()){
-        std::cout<<"not found"<<std::endl;
-        posicaoAtual[0] = 50.0;
-        posicaoAtual[1] = 50.0;
-        posicaoAtual[2] = 50.0;
-        horientacao[0] = 0.0;
-        horientacao[1] = 0.0;
-        horientacao[2] = 1.0;
-        return;
-    }
-
-    posicaoAtual[0] = first[key][0];
-    posicaoAtual[1] = first[key][1];
-    posicaoAtual[2] = first[key][2];
-
-   
-
-
-    glutPostRedisplay();
 }
